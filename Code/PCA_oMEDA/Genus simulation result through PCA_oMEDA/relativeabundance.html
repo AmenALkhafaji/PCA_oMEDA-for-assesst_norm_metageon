@@ -1,0 +1,318 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>relativeabundance</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2024-03-09"><meta name="DC.source" content="relativeabundance.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><a href="https://www.mathworks.com">Guide line</a></a></li><li><a href="#2">Relative abundance Code loading dataset and execution through pca_oMEDA</a></li><li><a href="#3">Ploting omeda for high depth and comparing to groundtruth</a></li><li><a href="#4">Ploting omeda for low depth and comparing to groundtruth</a></li><li><a href="#5">Ploting omeda for whole depth and comparing to groundtruth</a></li></ul></div><h2 id="1"><a href="https://www.mathworks.com">Guide line</a></h2><pre class="codeinput"><span class="comment">%#################################################################################</span>
+<span class="comment">%             A: Data_frame                                                     #</span>
+<span class="comment">%              1- Load your data (as CSV)  in your workspace</span>
+<span class="comment">%              2- From the open window, output type : array string</span>
+<span class="comment">%              3- Before press import, please select all data include header</span>
+<span class="comment">%</span>
+<span class="comment">%             B: ground_truth</span>
+<span class="comment">%             1- Load your ground truth (as CSV) in your workspce</span>
+<span class="comment">%             2- From the open window, output type : Numric matrix</span>
+<span class="comment">%             3-  press import</span>
+<span class="comment">%                                                                              #</span>
+<span class="comment">%                                                                              #</span>
+<span class="comment">%                                                                              #</span>
+<span class="comment">%                                                                              #</span>
+<span class="comment">%%##############################################################################</span>
+
+
+
+
+
+
+
+<span class="comment">%#########################################################################</span>
+<span class="comment">%#</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">%               Code:  Valdtion of normalztion methods                                            #</span>
+<span class="comment">%#              Author: Amen Adnan Khabeer; Jose Comacho; Crolina Comez                               #</span>
+<span class="comment">%#              Date: 19/02/2024</span>
+<span class="comment">%#              Email: amen.a.khabeer@uotechnology.edu.iq ;josecamacho@ugr.es;gomezll@ugr.es</span>
+<span class="comment">%#</span>
+<span class="comment">%#</span>
+<span class="comment">%#</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">%    Val_PCAOmeda( data_frame as (2D string) , ground_truth as ( vector))                                                                  #</span>
+<span class="comment">%#</span>
+<span class="comment">%    Note1 : both arguements are reqiured, no optional arguements in this function.                                                                    #</span>
+<span class="comment">%#   Note2 : please load your Simulation or data</span>
+<span class="comment">%#</span>
+<span class="comment">%    data_frame: is your normalized data ( 2D matrix with string values) ,where, row=no of</span>
+<span class="comment">%                samples, clo represents no taxan, last col represent controls( healthy/unhealthy),  the header is the name of bactria</span>
+<span class="comment">%</span>
+<span class="comment">%   ground_truth: a vector with double values, holding ground truth values</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% #########################################################################</span>
+</pre><h2 id="2">Relative abundance Code loading dataset and execution through pca_oMEDA</h2><pre class="codeinput">data_frame=relativeabundancegunes;
+
+ground_truth=genusGT;
+
+<span class="comment">% Exracuted the name of Classes ( Taxa) from simalution which is thie</span>
+<span class="comment">% frist raw with out last col (Tags)</span>
+<span class="comment">%function   Val_PCAOmeda(data_frame,ground_truth)</span>
+mystr=data_frame;
+class_name=mystr(1,1:width(mystr)-1);
+ind1 = str2double(mystr);
+
+<span class="comment">% extacted the data only from our dataset without header and last col(Tags)</span>
+xx=ind1(2:height(ind1),1:width(ind1)-1);
+
+ <span class="comment">%xx = log(xx./repmat(geomean(xx,2),1,size(xx,2)));</span>
+<span class="comment">% extracted the ecyosystems form our data (healthy-unhealthy ecosystems)</span>
+l1=ind1(2:height(ind1),width(ind1));
+<span class="comment">% split points according to depth to high and low</span>
+xx(isnan(xx)) = 1;
+xx(xx==inf)=0;
+low=100;
+high=200;
+</pre><h2 id="3">Ploting omeda for high depth and comparing to groundtruth</h2><p>xx(isnan(xx))=0;</p><pre class="codeinput">lh=(l1(high:size(xx,1)));
+xh=xx(high:size(xx,1),:);
+rj=omeda_pca(xh,1:2,[],lh);
+tot= sqrt( abs(rj)).* sign(rj)/sum(sqrt( abs(rj)));
+
+gt=(normalize(transpose(ground_truth),<span class="string">"norm"</span>,1));
+ngt= ( abs(gt)).* sign(gt)/sum(( abs(gt)));
+e1=((ngt'-tot).^2);
+e=(sum(ngt'-tot)).^2;
+<span class="comment">% disp('Normatization of groundtruth')</span>
+<span class="comment">% display(ngt);</span>
+<span class="comment">% disp('Normatization of omeda')</span>
+<span class="comment">% display(tot);</span>
+<span class="comment">% disp('Error per variable')</span>
+<span class="comment">% display(e1);</span>
+fprintf(<span class="string">'Total Error in high depth : %s\n'</span>, e);
+</pre><pre class="codeoutput">Total Error in high depth : 9.839775e-02
+</pre><img vspace="5" hspace="5" src="relativeabundance_01.png" alt=""> <h2 id="4">Ploting omeda for low depth and comparing to groundtruth</h2><pre class="codeinput">lLOW=(l1(1:low));
+xl=xx(1:low,:);
+rj=omeda_pca(xl,1:2,[],lLOW);
+tot= sqrt( abs(rj)).* sign(rj)/sum(sqrt( abs(rj)));
+gt=(normalize(transpose(ground_truth),<span class="string">"norm"</span>,1));
+ngt= ( abs(gt)).* sign(gt)/sum(( abs(gt)));
+e1=((ngt'-tot).^2);
+e=(sum(ngt'-tot)).^2;
+<span class="comment">% disp('Normatization of groundtruth')</span>
+<span class="comment">% display(ngt);</span>
+<span class="comment">% disp('Normatization of omeda')</span>
+<span class="comment">% display(tot);</span>
+<span class="comment">% disp('Error per variable')</span>
+<span class="comment">% display(e1);</span>
+fprintf(<span class="string">'Total Error low depth : %s\n'</span>, e);
+</pre><pre class="codeoutput">Total Error low depth : 1.099003e-01
+</pre><img vspace="5" hspace="5" src="relativeabundance_02.png" alt=""> <h2 id="5">Ploting omeda for whole depth and comparing to groundtruth</h2><pre class="codeinput">rj=omeda_pca(xx,1:2,[],l1);
+tot1= sqrt( abs(rj)).* sign(rj)/sum(sqrt( abs(rj)));
+
+gt1=(normalize(transpose(ground_truth),<span class="string">"norm"</span>,1));
+ngt1= ( abs(gt1)).* sign(gt1)/sum(( abs(gt1)));
+e11=((ngt1'-tot1).^2);
+e12=(sum(ngt1'-tot1)).^2;
+disp(sprintf(<span class="string">'Total Error whole depth: %s'</span>, e12));
+<span class="comment">%end</span>
+</pre><pre class="codeoutput">Total Error whole depth: 5.814860e-02
+</pre><img vspace="5" hspace="5" src="relativeabundance_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+%% <https://www.mathworks.com Guide line> 
+% 
+
+%#################################################################################
+%             A: Data_frame                                                     #                         
+%              1- Load your data (as CSV)  in your workspace                
+%              2- From the open window, output type : array string
+%              3- Before press import, please select all data include header
+%     
+%             B: ground_truth
+%             1- Load your ground truth (as CSV) in your workspce
+%             2- From the open window, output type : Numric matrix          
+%             3-  press import
+%                                                                              #
+%                                                                              #
+%                                                                              #
+%                                                                              #
+%%##############################################################################
+
+
+
+
+
+
+
+%#########################################################################
+%#              
+%  
+% 
+%               Code:  Valdtion of normalztion methods                                            #               
+%#              Author: Amen Adnan Khabeer; Jose Comacho; Crolina Comez                               #      
+%#              Date: 19/02/2024                                         
+%#              Email: amen.a.khabeer@uotechnology.edu.iq ;josecamacho@ugr.es;gomezll@ugr.es                
+%#                                       
+%#                                                                      
+%#   
+% 
+% 
+%    Val_PCAOmeda( data_frame as (2D string) , ground_truth as ( vector))                                                                  #
+%#   
+%    Note1 : both arguements are reqiured, no optional arguements in this function.                                                                    #
+%#   Note2 : please load your Simulation or data   
+%#   
+%    data_frame: is your normalized data ( 2D matrix with string values) ,where, row=no of
+%                samples, clo represents no taxan, last col represent controls( healthy/unhealthy),  the header is the name of bactria
+%    
+%   ground_truth: a vector with double values, holding ground truth values  
+%
+% 
+% #########################################################################
+
+
+%% Relative abundance Code loading dataset and execution through pca_oMEDA
+
+
+data_frame=relativeabundancegunes;
+
+ground_truth=genusGT;
+
+% Exracuted the name of Classes ( Taxa) from simalution which is thie
+% frist raw with out last col (Tags)
+%function   Val_PCAOmeda(data_frame,ground_truth)
+mystr=data_frame;
+class_name=mystr(1,1:width(mystr)-1);
+ind1 = str2double(mystr);
+
+% extacted the data only from our dataset without header and last col(Tags)
+xx=ind1(2:height(ind1),1:width(ind1)-1);
+
+ %xx = log(xx./repmat(geomean(xx,2),1,size(xx,2)));
+% extracted the ecyosystems form our data (healthy-unhealthy ecosystems)
+l1=ind1(2:height(ind1),width(ind1));
+% split points according to depth to high and low
+xx(isnan(xx)) = 1;
+xx(xx==inf)=0;
+low=100;
+high=200;
+
+%% Ploting omeda for high depth and comparing to groundtruth
+% xx(isnan(xx))=0;
+lh=(l1(high:size(xx,1)));
+xh=xx(high:size(xx,1),:);
+rj=omeda_pca(xh,1:2,[],lh);
+tot= sqrt( abs(rj)).* sign(rj)/sum(sqrt( abs(rj)));
+ 
+gt=(normalize(transpose(ground_truth),"norm",1));
+ngt= ( abs(gt)).* sign(gt)/sum(( abs(gt)));
+e1=((ngt'-tot).^2);
+e=(sum(ngt'-tot)).^2;
+% disp('Normatization of groundtruth')
+% display(ngt);
+% disp('Normatization of omeda')
+% display(tot);
+% disp('Error per variable')
+% display(e1);
+fprintf('Total Error in high depth : %s\n', e);
+
+
+
+%% Ploting omeda for low depth and comparing to groundtruth
+
+lLOW=(l1(1:low));
+xl=xx(1:low,:);
+rj=omeda_pca(xl,1:2,[],lLOW);
+tot= sqrt( abs(rj)).* sign(rj)/sum(sqrt( abs(rj)));
+gt=(normalize(transpose(ground_truth),"norm",1));
+ngt= ( abs(gt)).* sign(gt)/sum(( abs(gt)));
+e1=((ngt'-tot).^2);
+e=(sum(ngt'-tot)).^2;
+% disp('Normatization of groundtruth')
+% display(ngt);
+% disp('Normatization of omeda')
+% display(tot);
+% disp('Error per variable')
+% display(e1);
+fprintf('Total Error low depth : %s\n', e);
+
+
+
+%% Ploting omeda for whole depth and comparing to groundtruth
+
+
+
+rj=omeda_pca(xx,1:2,[],l1);
+tot1= sqrt( abs(rj)).* sign(rj)/sum(sqrt( abs(rj)));
+
+gt1=(normalize(transpose(ground_truth),"norm",1));
+ngt1= ( abs(gt1)).* sign(gt1)/sum(( abs(gt1)));
+e11=((ngt1'-tot1).^2);
+e12=(sum(ngt1'-tot1)).^2;
+disp(sprintf('Total Error whole depth: %s', e12));
+%end
+##### SOURCE END #####
+--></body></html>
