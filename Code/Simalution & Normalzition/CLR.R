@@ -24,8 +24,7 @@ library(easyCODA)
 rm(list=ls())
 
 # Load your data Simalution after Run your Simulation( pylum or Genus)
-setwd("D:\\")
-datos <- read.csv(file="D:\\fitfinal.csv", header=TRUE, sep=";")
+datos <- read.csv(file="Phylum.csv", header=TRUE, sep=";")
 
 # Remove Tag from the dataset sample
 tags <- datos$tags
@@ -40,5 +39,5 @@ df <- data.frame(clrlist$LR)
 df$tags <- tags 
 
 # Save the CLR values to a CSV file
-write.csv2(df,"D:\\clrpylum.csv", row.names = FALSE)
+write.csv2(df,"CLR.csv", row.names = FALSE)
 
