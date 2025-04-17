@@ -1,50 +1,43 @@
+#########################################################################
+#              Code: Cumulative Sum Scaling (CSS) Normalization         #
+#              Author: Amen Adnan Khabeer; Jose Comacho; Carolina Gomez #
+#              Date: 19/02/2024                                          #
+#              Emails: amen.a.khabeer@uotechnology.edu.iq               #
+#                      josecamacho@ugr.es; gomezll@ugr.es               #
+#                                                                       #
+#   Note: Load your simulation results (e.g., Phylum or Genus data)     #
+#         before running this script. Ensure the file is saved on D:\   #
+#########################################################################
+
+# Load required package
 library(metagenomeSeq)
 
-
-#########################################################################
-#              Code: Cumialtative Sum Scaling Code                                         #               
-#              Author: Amen Adnan Khabeer; Jose Comacho; Crolina Comez  #                              #      
-#              Date: 19/02/2024                                         #
-#              Email: amen.a.khabeer@uotechnology.edu.iq                #
-#                   ;josecamacho@ugr.es;gomezll@ugr.es                  #  
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#   Note : please load your Simulation or data                          #
-#########################################################################
-
-
-# Load your data Simulation after Run your Simulation( pylum or Genus); Take in your account that your data saved in drive D
-
-
+# Set working directory where your dataset is saved
 setwd("D:\\")
-Rrare <- read.csv(file="Phylum.csv", header=TRUE, sep=";")
 
+# Load your dataset (e.g., Phylum abundance table with metadata)
+abundance_data <- read.csv(file = "Phylum.csv", header = TRUE, sep = ";")
 
-# Remove Tag from the dataset sample
+# Extract sample labels (e.g., groups, tags, or IDs)
+sample_labels <- abundance_data$tags
 
-tags <- Rrare$tags
+# Remove the 'tags' column to retain only abundance values
+abundance_matrix <- abundance_data[, -6]
 
-Rrare$tags <- NULL
+# Replace zero values to avoid issues with log transformations
+abundance_matrix[abundance_matrix == 0] <- 0.001
 
-# set replacment of zero reads in samples 
+# Create a metagenomeSeq MRexperiment object with the count data
+meta_seq_object <- newMRexperiment(abundance_matrix)
 
-Rrare[Rrare==0] <- 0.001
+# Calculate normalization scaling factors and apply CSS normalization
+meta_seq_object_css <- cumNorm(meta_seq_object, p = cumNormStatFast(meta_seq_object))
 
-metaSeqObject      = newMRexperiment(Rrare) 
+# Extract normalized, log-transformed abundance values
+normalized_log_counts <- data.frame(MRcounts(meta_seq_object_css, norm = TRUE, log = TRUE))
 
-# find scale factor of CSS
+# Add the sample labels back to the normalized dataset
+normalized_log_counts$tags <- sample_labels
 
-metaSeqObject_CSS  = cumNorm( metaSeqObject, p=cumNormStatFast(metaSeqObject) )
-
-# extract norlamzed data from metaSeqObject_CSS
-
-OTU_read_count_CSS = data.frame(MRcounts(metaSeqObject_CSS, norm=TRUE, log=TRUE))
-
-#retrun Tag to dataset
-OTU_read_count_CSS$tags<-tags
-
-# Save the RLE values to a CSV file
-
-write.csv(OTU_read_count_CSS, "CSS.csv")
-
+# Save the final normalized dataset to a CSV file
+write.csv(normalized_log_counts, "CSS.csv")
