@@ -1,43 +1,43 @@
-
-
-
 #########################################################################
-#              Code:  CLR Code                                  #               
-#              Author: Amen Adnan Khabeer; Jose Comacho; Crolina Comez  #                              #      
-#              Date: 19/02/2024                                         #
-#              Email: amen.a.khabeer@uotechnology.edu.iq                #
-#                   ;josecamacho@ugr.es;gomezll@ugr.es                  #  
+#              Code:  CLR Transformation                               #
+#              Author: Amen Adnan Khabeer; Jose Comacho; Carolina Gomez#
+#              Date: 12/04/2024                                        #
+#              Emails: amen.a.khabeer@uotechnology.edu.iq              #
+#                      josecamacho@ugr.es; gomezll@ugr.es              #
 #                                                                       #
-#                                                                       #
-#                                                                       #
-#   Note : please load your Simulation or data                          #
+#   Note : Please load your simulation or data before running          #
 #########################################################################
 
+# Clear the current R environment
+rm(list = ls())
 
-
-rm(list=ls())
+# Install and load the required package for compositional data analysis
 install.packages("easyCODA")
 library(easyCODA)
 
+# Clear again just in case (not strictly necessary after the first `rm`)
+rm(list = ls())
 
+# Load your dataset (e.g., simulated Phylum or Genus level abundance data)
+abundance_data <- read.csv(file = "Phylum.csv", header = TRUE, sep = ";")
 
-rm(list=ls())
+# Extract the sample labels or group identifiers
+sample_labels <- abundance_data$tags
 
-# Load your data Simalution after Run your Simulation( pylum or Genus)
-datos <- read.csv(file="Phylum.csv", header=TRUE, sep=";")
+# Remove the 'tags' column from the abundance matrix
+abundance_matrix <- abundance_data[, -6]
 
-# Remove Tag from the dataset sample
-tags <- datos$tags
+# Replace all zero values with a small number to avoid log(0) errors
+abundance_matrix[abundance_matrix == 0] <- 1
 
-datos$tags <- NULL
-datos[datos==0] <- 0.001
-#aplicamos centerd log-ratio transformation
-clrlist <- CLR(datos, weight = F)
+# Apply Centered Log-Ratio (CLR) transformation to the abundance data
+clr_result <- CLR(abundance_matrix, weight = FALSE)
 
-#a?adimos de nuevo el vector "y"
-df <- data.frame(clrlist$LR)
-df$tags <- tags 
+# Create a new data frame containing CLR-transformed values
+clr_dataframe <- data.frame(clr_result$LR)
 
-# Save the CLR values to a CSV file
-write.csv2(df,"CLR.csv", row.names = FALSE)
+# Add the sample labels back to the CLR-transformed data
+clr_dataframe$tags <- sample_labels
 
+# Save the final CLR-transformed data to a CSV file
+write.csv2(clr_dataframe, "CLR.csv", row.names = FALSE)
