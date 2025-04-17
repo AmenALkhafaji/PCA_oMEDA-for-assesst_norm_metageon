@@ -1,225 +1,155 @@
+# Authors: Amen Al Khafaji, Carolina Gómez-Llorente, José Camacho
+# Contact: amen.a.khabeer@uotechnology.edu.iq
+# Date: 12/4/2024
 
 rm(list=ls())
 library(tidyr)
 library(dplyr)
 
-#    echosystems healthy/unhealthy 
+# Healthy Ecosystem
+healthy_ecosystem <- c( c(rep("A",0.15 *1000000)) ,c(rep("B",0.6*1000000)),
+                        c(rep("C",1.5*1000000)), c(rep("D",1.6*1000000)),
+                        c(rep("E",12.2*1000000)), c(rep("FF",4.1*1000000)),
+                        c(rep("Gg",30.8*1000000)), c(rep("H",2.3*1000000)),
+                        c(rep("I",0.14*1000000)), c(rep("J",1.21*1000000)),
+                        c(rep("K",0.18*1000000)), c(rep("L",0.32*1000000)),
+                        c(rep("M",3.31*1000000)), c(rep("N",0.63*1000000)),
+                        c(rep("O",0.17*1000000)), c(rep("P",0.34*1000000)),
+                        c(rep("Q",1.08*1000000)), c(rep("R",0.14*1000000)),
+                        c(rep("S",2.15*1000000)), c(rep("TT",2.37*1000000)),
+                        c(rep("U",0.033*1000000)), c(rep("V",0.47*1000000)),
+                        c(rep("W",0.34*1000000)), c(rep("X",5.46*1000000)),
+                        c(rep("Y",3.47*1000000)), c(rep("Z",6.42*1000000)),
+                        c(rep("pp",4.25*1000000)),
+                        c(rep("ppA",2.81*1000000)),c(rep("ppB",0.36*1000000)),
+                        c(rep("ppC",1.02*1000000)),c(rep("ppD",0.83*1000000)),
+                        c(rep("ppE",1.80*1000000)),
+                        c(rep("ppFF",0.31*1000000)),c(rep("pptr",0.001*1000000)),c(rep("ppH",0.17*1000000)),c(rep("ppI",7.1*1000000)))
 
-ecosistema1 <- c( c(rep("A",0.15 *1000)) ,c(rep("B",0.6*1000)),
-                  c(rep("C",1.5*1000)), c(rep("D",1.6*1000)),
-                  c(rep("E",12.2*1000)), c(rep("FF",4.1*1000)),
-                  c(rep("Gg",30.8*1000)), c(rep("H",2.3*1000)),
-                  c(rep("I",0.14*1000)), c(rep("J",1.21*1000)),
-                  c(rep("K",0.18*1000)), c(rep("L",0.32*1000)),
-                  c(rep("M",3.31*1000)), c(rep("N",0.63*1000)),
-                  c(rep("O",0.17*1000)), c(rep("P",0.34*1000)),
-                  c(rep("Q",1.08*1000)), c(rep("R",0.14*1000)),
-                  c(rep("S",2.15*1000)), c(rep("TT",2.37*1000)),
-                  c(rep("U",0.033*1000)), c(rep("V",0.47*1000)),
-                  c(rep("W",0.34*1000)), c(rep("X",5.46*1000)),
-                  c(rep("Y",3.47*1000)), c(rep("Z",6.42*1000)),
-                  c(rep("pp",4.25*1000)),
-                  c(rep("ppA",2.81*1000)),c(rep("ppB",0.36*1000)),
-                  c(rep("ppC",1.02*1000)),c(rep("ppD",0.83*1000)),
-                  c(rep("ppE",1.80*1000)),
-                  c(rep("ppFF",0.31*1000)),c(rep("pptr",0.001*1000)),c(rep("ppH",0.17*1000)),c(rep("ppI",7.1*1000)))
+# Sick Ecosystem
+sick_ecosystem <- c( c(rep("A",0.38*1000000)) ,c(rep("B",0.6*1000000)),
+                     c(rep("C",1.5*1000000)), c(rep("D",0.001*1000000)),
+                     c(rep("E",26*1000000)), c(rep("FF",0.01*1000000)),
+                     c(rep("Gg",0.02*1000000)), c(rep("H",11*1000000)),
+                     c(rep("I",0.7*1000000)), c(rep("J",1*1000000)),
+                     c(rep("K",0.14*1000000)), c(rep("L",1*1000000)),
+                     c(rep("M",0.15*1000000)), c(rep("N",0.3*1000000)),
+                     c(rep("O",0.001*1000000)), c(rep("P",0.3*1000000)),
+                     c(rep("Q",3*1000000)), c(rep("R",0.14*1000000)),
+                     c(rep("S",0.02*1000000)), c(rep("TT",0.5*1000000)),
+                     c(rep("U",1*1000000)), c(rep("V",0.14*1000000)),
+                     c(rep("W",2*1000000)), c(rep("X",4.8*1000000)),
+                     c(rep("Y",0.001*1000000)), c(rep("Z",0.2*1000000)),
+                     c(rep("pp",0.05*1000000)),
+                     c(rep("ppA",5*1000000)),c(rep("ppB",3)),
+                     c(rep("ppC",2.7*1000000)),c(rep("ppD",0.8*1000000)),
+                     c(rep("ppE",8*1000000)),c(rep("ppFF",0.22*1000000)),c(rep("pptr",0.001*1000000)),
+                     c(rep("ppH",0.31*1000000)),c(rep("ppI",1.23*1000000)))
 
-#    ECOSISTEMA ENFERMO
+# Convert to factors
+healthy_ecosystem <- type.convert(healthy_ecosystem, as.is = FALSE) 
+sick_ecosystem <- type.convert(sick_ecosystem, as.is = FALSE) 
 
-#Firmicutes <- 48%       (A)
-#Bacteroidetes <- 22%    (B)
-#Actinobacteria <- 12%   (C)
-#Proteobacteria <- 12%   (E)
-#Fusobacteria <- 6%      (D)
+# Initialize healthy ecosystem sample data frame
+final_result <- data.frame(matrix(0, ncol = 36, nrow = 0))
 
-ecosistema2 <- c( c(rep("A",0.38*1000)) ,c(rep("B",0.6*1000)),
-                  c(rep("C",1.5*1000)), c(rep("D",0.001*1000)),
-                  c(rep("E",26*1000)), c(rep("FF",0.01*1000)),
-                  c(rep("Gg",0.02*1000)), c(rep("H",11*1000)),
-                  c(rep("I",0.7*1000)), c(rep("J",1*1000)),
-                  c(rep("K",0.14*1000)), c(rep("L",1*1000)),
-                  c(rep("M",0.15*1000)), c(rep("N",0.3*1000)),
-                  c(rep("O",0.001*1000)), c(rep("P",0.3*1000)),
-                  c(rep("Q",3*1000)), c(rep("R",0.14*1000)),
-                  c(rep("S",0.02*1000)), c(rep("TT",0.5*1000)),
-                  c(rep("U",1*1000)), c(rep("V",0.14*1000)),
-                  c(rep("W",2*1000)), c(rep("X",4.8*1000)),
-                  c(rep("Y",0.001*1000)), c(rep("Z",0.2*1000)),
-                  c(rep("pp",0.05*1000)),
-                  c(rep("ppA",5*1000)),c(rep("ppB",3)),
-                  c(rep("ppC",2.7*1000)),c(rep("ppD",0.8*1000)),
-                  c(rep("ppE",8*1000)),c(rep("ppFF",0.22*1000)),c(rep("pptr",0.001*1000))
-        ,c(rep("ppH",0.31*1000)),c(rep("ppI",1.23*1000)))
+# Add columns
+colnames(final_result) <- c("Bifidobacterium", "Butyricimonas", "Odoribacter", "Paraprevotella",
+                            "Bacteroides", "Parabacteroides", "Prevotella", "unknown1", "unknown2",
+                            "unknown3", "Clostridium", "unknown4", "unknown5", "Ruminococcus", "Anaerostipes", 
+                            "Blautia", "Coprococcus", "Dorea", "Lachnospira", "Roseburia", "unknown6", 
+                            "unknown7", "unknown8", "unknown9", "Faecalibacterium", "Oscillospira", 
+                            "Ruminococcus", "Dialister", "unknown10", "unknown11", "unknown12", "Sutterella", 
+                            "Escherichia", "Klebsiella", "Haemophilus", "Akkermansia", "Tags")
 
+# Healthy ecosystem sample loop
+samples_count <- 151
+counter <- 1
+final_result <- as.list(final_result)
 
-
-#    ECOSISTEMA ENFERMO
-
-#Firmicutes <- 48%       (A)
-#Bacteroidetes <- 22%    (B)
-#Actinobacteria <- 12%   (C)
-#Proteobacteria <- 12%   (E)
-#Fusobacteria <- 6%      (D)
-
-
-
-#convertimos en factores
-
-ecosistema1 <- type.convert(ecosistema1, as.is = FALSE) # -> factor
-ecosistema2 <- type.convert(ecosistema2, as.is = FALSE) # -> factor
-
-
-#bucle de muestras sano
-fitfinal1 <- NULL
-fitfinal1$A <- 0
-fitfinal1$B <- 0
-fitfinal1$C <- 0
-fitfinal1$D <- 0
-fitfinal1$E <- 0
-fitfinal1$FF <- 0
-fitfinal1$G <- 0
-fitfinal1$H <- 0
-fitfinal1$I <- 0
-fitfinal1$Gg <- 0
-fitfinal1$K <- 0
-fitfinal1$L <- 0
-fitfinal1$M <- 0
-fitfinal1$N <- 0
-fitfinal1$O <- 0
-fitfinal1$P <- 0
-fitfinal1$Q <- 0
-fitfinal1$R <- 0
-fitfinal1$S <- 0
-fitfinal1$TT <- 0
-fitfinal1$U <- 0
-fitfinal1$V <- 0
-fitfinal1$W <- 0
-fitfinal1$X <- 0
-fitfinal1$Y <- 0
-fitfinal1$Z <- 0
-fitfinal1$pp <- 0
-
-fitfinal1$ppA<-0
-fitfinal1$ppB<-0
-fitfinal1$ppC<-0
-fitfinal1$ppD<-0
-fitfinal1$ppE<-0
-fitfinal1$ppFF<-0
-fitfinal1$pptr<-0
-fitfinal1$ppH<-0
-fitfinal1$ppI<-0
-
-
-
-fitfinal1 <- data.frame(fitfinal1, stringsAsFactors = T)
-
-nmuestras <- 151  #ej: 21 son 20 muestras 1 y 20 muestras 2 = 40 muestras total 
-n <- 1
-fitfinal1<- as.list(fitfinal1)
-while (n<nmuestras){
-  muestra1 <- sample(x=ecosistema1, size=sample(x=100:300,size=1), replace = F)
-  fit <- summary(muestra1)
-  fitfinal1$A <- rbind(fitfinal1$A,fit[1])
-  fitfinal1$B <- rbind(fitfinal1$B,fit[2])
-  fitfinal1$C <- rbind(fitfinal1$C,fit[3])
-  fitfinal1$D <- rbind(fitfinal1$D,fit[4])
-  fitfinal1$E <- rbind(fitfinal1$E,fit[5])
-  fitfinal1$FF <- rbind(fitfinal1$FF,fit[6])
-  fitfinal1$Gg <- rbind(fitfinal1$Gg,fit[7])
-  fitfinal1$H <- rbind(fitfinal1$H,fit[8])
-  fitfinal1$I <- rbind(fitfinal1$I,fit[9])
-  fitfinal1$G <- rbind(fitfinal1$J,fit[10])
-  fitfinal1$K <- rbind(fitfinal1$K,fit[11])
-  fitfinal1$L <- rbind(fitfinal1$L,fit[12])
-  fitfinal1$M <- rbind(fitfinal1$M,fit[13])
-  fitfinal1$N <- rbind(fitfinal1$N,fit[14])
-  fitfinal1$O <- rbind(fitfinal1$O,fit[15])
-  fitfinal1$P <- rbind(fitfinal1$P,fit[16])
-  fitfinal1$Q <- rbind(fitfinal1$Q,fit[17])
-  fitfinal1$R <- rbind(fitfinal1$R,fit[18])
-  fitfinal1$S <- rbind(fitfinal1$S,fit[19])
-  fitfinal1$TT <-rbind(fitfinal1$TT,fit[20])
-  fitfinal1$U <- rbind(fitfinal1$U,fit[21])
-  fitfinal1$V <- rbind(fitfinal1$V,fit[22])
-  fitfinal1$W <- rbind(fitfinal1$W,fit[23])
-  fitfinal1$X <- rbind(fitfinal1$X,fit[24])
-  fitfinal1$Y <- rbind(fitfinal1$Y,fit[25])
-  fitfinal1$Z <- rbind(fitfinal1$Z,fit[26])
-  fitfinal1$pp <- rbind(fitfinal1$pp,fit[27])
-  
-  fitfinal1$ppA<-rbind(fitfinal1$ppA,fit[28])
-  fitfinal1$ppB<-rbind(fitfinal1$ppB,fit[29])
-  fitfinal1$ppC<-rbind(fitfinal1$ppC,fit[30])
-  fitfinal1$ppD<-rbind(fitfinal1$ppD,fit[31])
-  fitfinal1$ppE<-rbind(fitfinal1$ppE,fit[32])
-  fitfinal1$ppFF<-rbind(fitfinal1$ppFF,fit[33])
-  fitfinal1$pptr<-rbind(fitfinal1$pptr,fit[34])
-  fitfinal1$ppH<-rbind(fitfinal1$ppH,fit[35])
-  fitfinal1$ppI<-rbind(fitfinal1$ppI,fit[36])
-  n <- n+1
+while (counter < samples_count) {
+  sample1 <- sample(x = healthy_ecosystem, size = sample(x = 100:300, size = 1), replace = F)
+  result <- summary(sample1)
+  final_result$Bifidobacterium <- rbind(final_result$Bifidobacterium, result[1])
+  final_result$Butyricimonas <- rbind(final_result$Butyricimonas, result[2])
+  final_result$Odoribacter <- rbind(final_result$Odoribacter, result[3])
+  final_result$Paraprevotella <- rbind(final_result$Paraprevotella, result[4])
+  final_result$Bacteroides <- rbind(final_result$Bacteroides, result[5])
+  final_result$Parabacteroides <- rbind(final_result$Parabacteroides, result[6])
+  final_result$Prevotella <- rbind(final_result$Prevotella, result[7])
+  final_result$unknown1 <- rbind(final_result$unknown1, result[8])
+  final_result$unknown2 <- rbind(final_result$unknown2, result[9])
+  final_result$Clostridium <- rbind(final_result$Clostridium, result[10])
+  final_result$unknown4 <- rbind(final_result$unknown4, result[11])
+  final_result$unknown5 <- rbind(final_result$unknown5, result[12])
+  final_result$Ruminococcus <- rbind(final_result$Ruminococcus, result[13])
+  final_result$Anaerostipes <- rbind(final_result$Anaerostipes, result[14])
+  final_result$Blautia <- rbind(final_result$Blautia, result[15])
+  final_result$Coprococcus <- rbind(final_result$Coprococcus, result[16])
+  final_result$Dorea <- rbind(final_result$Dorea, result[17])
+  final_result$Lachnospira <- rbind(final_result$Lachnospira, result[18])
+  final_result$Roseburia <- rbind(final_result$Roseburia, result[19])
+  final_result$unknown6 <- rbind(final_result$unknown6, result[20])
+  final_result$unknown7 <- rbind(final_result$unknown7, result[21])
+  final_result$unknown8 <- rbind(final_result$unknown8, result[22])
+  final_result$unknown9 <- rbind(final_result$unknown9, result[23])
+  final_result$Faecalibacterium <- rbind(final_result$Faecalibacterium, result[24])
+  final_result$Oscillospira <- rbind(final_result$Oscillospira, result[25])
+  final_result$Dialister <- rbind(final_result$Dialister, result[26])
+  final_result$unknown10 <- rbind(final_result$unknown10, result[27])
+  final_result$unknown11 <- rbind(final_result$unknown11, result[28])
+  final_result$unknown12 <- rbind(final_result$unknown12, result[29])
+  final_result$Sutterella <- rbind(final_result$Sutterella, result[30])
+  final_result$Escherichia <- rbind(final_result$Escherichia, result[31])
+  final_result$Klebsiella <- rbind(final_result$Klebsiella, result[32])
+  final_result$Haemophilus <- rbind(final_result$Haemophilus, result[33])
+  final_result$Akkermansia <- rbind(final_result$Akkermansia, result[34])
+  counter <- counter + 1
 }
 
-n <- 1
-#bucle de muestras enfermo
-while (n<(nmuestras)){
-  muestra2 <- sample(x=ecosistema2, size=sample(x=100:300,size=1), replace = F)
-  fit <- summary(muestra2)
-  fitfinal1$A <- rbind(fitfinal1$A,fit[1])
-  fitfinal1$B <- rbind(fitfinal1$B,fit[2])
-  fitfinal1$C <- rbind(fitfinal1$C,fit[3])
-  fitfinal1$D <- rbind(fitfinal1$D,fit[4])
-  fitfinal1$E <- rbind(fitfinal1$E,fit[5])
-  fitfinal1$FF <- rbind(fitfinal1$FF,fit[6])
-  fitfinal1$Gg <- rbind(fitfinal1$Gg,fit[7])
-  fitfinal1$H <- rbind(fitfinal1$H,fit[8])
-  fitfinal1$I <- rbind(fitfinal1$I,fit[9])
-  fitfinal1$G <- rbind(fitfinal1$J,fit[10])
-  fitfinal1$K <- rbind(fitfinal1$K,fit[11])
-  fitfinal1$L <- rbind(fitfinal1$L,fit[12])
-  fitfinal1$M <- rbind(fitfinal1$M,fit[13])
-  fitfinal1$N <- rbind(fitfinal1$N,fit[14])
-  fitfinal1$O <- rbind(fitfinal1$O,fit[15])
-  fitfinal1$P <- rbind(fitfinal1$P,fit[16])
-  fitfinal1$Q <- rbind(fitfinal1$Q,fit[17])
-  fitfinal1$R <- rbind(fitfinal1$R,fit[18])
-  fitfinal1$S <- rbind(fitfinal1$S,fit[19])
-  fitfinal1$TT <-rbind(fitfinal1$TT,fit[20])
-  fitfinal1$U <- rbind(fitfinal1$U,fit[21])
-  fitfinal1$V <- rbind(fitfinal1$V,fit[22])
-  fitfinal1$W <- rbind(fitfinal1$W,fit[23])
-  fitfinal1$X <- rbind(fitfinal1$X,fit[24])
-  fitfinal1$Y <- rbind(fitfinal1$Y,fit[25])
-  fitfinal1$Z <- rbind(fitfinal1$Z,fit[26])
-  fitfinal1$pp <- rbind(fitfinal1$pp,fit[27])
-  
-  fitfinal1$ppA<-rbind(fitfinal1$ppA,fit[28])
-  fitfinal1$ppB<-rbind(fitfinal1$ppB,fit[29])
-  fitfinal1$ppC<-rbind(fitfinal1$ppC,fit[30])
-  fitfinal1$ppD<-rbind(fitfinal1$ppD,fit[31])
-  fitfinal1$ppE<-rbind(fitfinal1$ppE,fit[32])
-  fitfinal1$ppFF<-rbind(fitfinal1$ppFF,fit[33])
-  fitfinal1$pptr<-rbind(fitfinal1$pptr,fit[34])
-  fitfinal1$ppH<-rbind(fitfinal1$ppH,fit[35])
-  fitfinal1$ppI<-rbind(fitfinal1$ppI,fit[36])
-  n <- n+1
+counter <- 1
+# Sick ecosystem sample loop
+while (counter < samples_count) {
+  sample2 <- sample(x = sick_ecosystem, size = sample(x = 100:300, size = 1), replace = F)
+  result <- summary(sample2)
+  final_result$Bifidobacterium <- rbind(final_result$Bifidobacterium, result[1])
+  final_result$Butyricimonas <- rbind(final_result$Butyricimonas, result[2])
+  final_result$Odoribacter <- rbind(final_result$Odoribacter, result[3])
+  final_result$Paraprevotella <- rbind(final_result$Paraprevotella, result[4])
+  final_result$Bacteroides <- rbind(final_result$Bacteroides, result[5])
+  final_result$Parabacteroides <- rbind(final_result$Parabacteroides, result[6])
+  final_result$Prevotella <- rbind(final_result$Prevotella, result[7])
+  final_result$unknown1 <- rbind(final_result$unknown1, result[8])
+  final_result$unknown2 <- rbind(final_result$unknown2, result[9])
+  final_result$Clostridium <- rbind(final_result$Clostridium, result[10])
+  final_result$unknown4 <- rbind(final_result$unknown4, result[11])
+  final_result$unknown5 <- rbind(final_result$unknown5, result[12])
+  final_result$Ruminococcus <- rbind(final_result$Ruminococcus, result[13])
+  final_result$Anaerostipes <- rbind(final_result$Anaerostipes, result[14])
+  final_result$Blautia <- rbind(final_result$Blautia, result[15])
+  final_result$Coprococcus <- rbind(final_result$Coprococcus, result[16])
+  final_result$Dorea <- rbind(final_result$Dorea, result[17])
+  final_result$Lachnospira <- rbind(final_result$Lachnospira, result[18])
+  final_result$Roseburia <- rbind(final_result$Roseburia, result[19])
+  final_result$unknown6 <- rbind(final_result$unknown6, result[20])
+  final_result$unknown7 <- rbind(final_result$unknown7, result[21])
+  final_result$unknown8 <- rbind(final_result$unknown8, result[22])
+  final_result$unknown9 <- rbind(final_result$unknown9, result[23])
+  final_result$Faecalibacterium <- rbind(final_result$Faecalibacterium, result[24])
+  final_result$Oscillospira <- rbind(final_result$Oscillospira, result[25])
+  final_result$Dialister <- rbind(final_result$Dialister, result[26])
+  final_result$unknown10 <- rbind(final_result$unknown10, result[27])
+  final_result$unknown11 <- rbind(final_result$unknown11, result[28])
+  final_result$unknown12 <- rbind(final_result$unknown12, result[29])
+  final_result$Sutterella <- rbind(final_result$Sutterella, result[30])
+  final_result$Escherichia <- rbind(final_result$Escherichia, result[31])
+  final_result$Klebsiella <- rbind(final_result$Klebsiella, result[32])
+  final_result$Haemophilus <- rbind(final_result$Haemophilus, result[33])
+  final_result$Akkermansia <- rbind(final_result$Akkermansia, result[34])
+  counter <- counter + 1
 }
-fitfinal1 <- data.frame(fitfinal1$A,fitfinal1$B,fitfinal1$C,fitfinal1$D, fitfinal1$E,fitfinal1$FF ,fitfinal1$Gg ,fitfinal1$H ,fitfinal1$I ,fitfinal1$G ,fitfinal1$K ,
-                        fitfinal1$L ,fitfinal1$M ,fitfinal1$N ,fitfinal1$O ,fitfinal1$P ,fitfinal1$Q ,fitfinal1$R ,fitfinal1$S ,fitfinal1$TT ,fitfinal1$U ,fitfinal1$V ,fitfinal1$W ,fitfinal1$X ,fitfinal1$Y ,fitfinal1$Z ,fitfinal1$pp,fitfinal1$ppA,fitfinal1$ppB,fitfinal1$ppC,fitfinal1$ppD,fitfinal1$ppE,fitfinal1$ppFF,fitfinal1$pptr,fitfinal1$ppH,fitfinal1$ppI )
-               
 
-fitfinal1 <- fitfinal1[-1,]
+final_result <- data.frame(final_result)
 
-fitfinal1$tags <- cbind(c(rep("1", nmuestras-1), rep("2", nmuestras-1)))
-fitfinal1[,"tags"]<-factor(fitfinal1[,"tags"]) #tags to FACTORS
-
-
-colnames(fitfinal1) <- c("Bifidobacterium","Butyricimonas","Odoribacter","Paraprevotella",
-                          "Bacteroides","Parabacteroides","Prevotella","unkwon1","unkwon2",
-                          "unkwon3", "Clostridium","unkwon4","unkwon5","Ruminococcus","Anaerostipes","Blautia",
-                           "Coprococcus","Dorea","Lachnospira","Roseburia","unkwon6",
-                           "unkwon7","unkwon8","unkwon9","Faecalibacterium","Oscillospira",
-                             "Ruminococcus","Dialister","unkwon10","unkwon11","unkwon12","Sutterella",
-                             "Escherichia","Klebsiella","Haemophilus","Akkermansia","Tags")
-
-write.csv2(fitfinal1,"F:\\genus.csv", row.names = FALSE)
-
+# Save to CSV
+write.csv2(final_result, "Genus.csv", row.names = FALSE)
