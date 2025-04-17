@@ -1,91 +1,109 @@
-######Type 2 diabetes######  
+# Authors: Amen Al Khafaji, Carolina Gómez-Llorente, José Camacho
+# Contact: amen.a.khabeer@uotechnology.edu.iq
+# Date: 12/4/2024
+# Description: Simulation and sampling of gut microbiota profiles for healthy and unhealthy ecosystems
+#              with the purpose of classification and comparative analysis.
 
-rm(list=ls())
+# Clean the environment
+rm(list = ls())
+
+# Load required libraries
 library(tidyr)
 library(dplyr)
 
-#    ECOSISTEMA SANO
+# ---------------------------------------------
+# Define healthy microbiota composition
+# ---------------------------------------------
+healthy_microbiome <- c(rep("Bacillota", 50 * 1000000),
+                        rep("Bacteroidetes", 35 * 1000000),
+                        rep("Actinobacteria", 0.5 * 1000000),
+                        rep("Verrucomicrobiota", 6 * 1000000),
+                        rep("Proteobacteria", 2.2 * 1000000))
 
-#Firmicutes <- 45.0001%       (A)
-#Bacteroidetes <- 45%         (B)
-#Actinobacteria <- 3.3333%    (C)
-#Verrucomcrobiota <- 3.33333%   (D)
-#Proteobacteria <- 3.33333%     (E)
-ecosistema1 <- c( c(rep("A",50 *1000)) ,c(rep("B",35*1000)),
-                  c(rep("C",0.5*1000)), c(rep("D",6*1000)),
-                  c(rep("E",2.2*1000)))
+# ---------------------------------------------
+# Define unhealthy microbiota composition
+# ---------------------------------------------
+unhealthy_microbiome <- c(rep("Bacillota", 45 * 1000000),
+                          rep("Bacteroidetes", 40 * 1000000),
+                          rep("Actinobacteria", 1.15 * 1000000),
+                          rep("Verrucomicrobiota", 3 * 1000000),
+                          rep("Proteobacteria", 10 * 1000000))
 
-#    ECOSISTEMA ENFERMO
+# Convert microbiome vectors into factors
+healthy_microbiome <- type.convert(healthy_microbiome, as.is = FALSE)
+unhealthy_microbiome <- type.convert(unhealthy_microbiome, as.is = FALSE)
 
-#Firmicutes <- 48%       (A)
-#Bacteroidetes <- 22%    (B)
-#Actinobacteria <- 12%   (C)
-#Proteobacteria <- 12%   (E)
-#Fusobacteria <- 6%      (D)
+# Initialize dataframe for storing sample summaries
+sample_summary <- NULL
+sample_summary$Bacillota <- 0
+sample_summary$Bacteroidetes <- 0
+sample_summary$Actinobacteria <- 0
+sample_summary$Verrucomicrobiota <- 0
+sample_summary$Proteobacteria <- 0
+sample_summary <- data.frame(sample_summary, stringsAsFactors = TRUE)
 
-ecosistema2 <- c( c(rep("A",45*1000)) ,c(rep("B",40*1000)),
-                  c(rep("C",1.15*1000)), c(rep("D",3*1000)),
-                  c(rep("E",10*1000)))
+# Number of samples to generate per group
+num_samples <- 151
 
-#convertimos en factores
+# ---------------------------------------------
+# Generate samples from healthy microbiome
+# ---------------------------------------------
+i <- 1
+sample_summary <- as.list(sample_summary)
 
-ecosistema1 <- type.convert(ecosistema1, as.is = FALSE) # -> factor
-ecosistema2 <- type.convert(ecosistema2, as.is = FALSE) # -> factor
-
-#bucle de muestras sano
-fitfinal1 <- NULL
-fitfinal1$A <- 0
-fitfinal1$B <- 0
-fitfinal1$C <- 0
-fitfinal1$D <- 0
-fitfinal1$E <- 0
-fitfinal1 <- data.frame(fitfinal1, stringsAsFactors = T)
-
-nmuestras <- 151   #ej: 21 son 20 muestras 1 y 20 muestras 2 = 40 muestras total 
-n <- 1
-fitfinal1<- as.list(fitfinal1)
-while (n<nmuestras){
-  muestra1 <- sample(x=ecosistema1, size=sample(x=100:300,size=1), replace = F)
-  fit <- summary(muestra1)
-  fitfinal1$A <- rbind(fitfinal1$A,fit[1])
-  fitfinal1$B <- rbind(fitfinal1$B,fit[2])
-  fitfinal1$C <- rbind(fitfinal1$C,fit[3])
-  fitfinal1$D <- rbind(fitfinal1$D,fit[4])
-  fitfinal1$E <- rbind(fitfinal1$E,fit[5])
-  n <- n+1
+while (i < num_samples) {
+  sample_healthy <- sample(x = healthy_microbiome, size = sample(x = 100:300, size = 1), replace = FALSE)
+  counts <- summary(sample_healthy)
+  sample_summary$Bacillota <- rbind(sample_summary$Bacillota, counts[1])
+  sample_summary$Bacteroidetes <- rbind(sample_summary$Bacteroidetes, counts[2])
+  sample_summary$Actinobacteria <- rbind(sample_summary$Actinobacteria, counts[3])
+  sample_summary$Verrucomicrobiota <- rbind(sample_summary$Verrucomicrobiota, counts[4])
+  sample_summary$Proteobacteria <- rbind(sample_summary$Proteobacteria, counts[5])
+  i <- i + 1
 }
 
-n <- 1
-#bucle de muestras enfermo
-while (n<(nmuestras)){
-  muestra2 <- sample(x=ecosistema2, size=sample(x=100:300,size=1), replace = F)
-  fit <- summary(muestra2)
-  fitfinal1$A <- rbind(fitfinal1$A,fit[1])
-  fitfinal1$B <- rbind(fitfinal1$B,fit[2])
-  fitfinal1$C <- rbind(fitfinal1$C,fit[3])
-  fitfinal1$D <- rbind(fitfinal1$D,fit[4])
-  fitfinal1$E <- rbind(fitfinal1$E,fit[5])
-  n <- n+1
+# ---------------------------------------------
+# Generate samples from unhealthy microbiome
+# ---------------------------------------------
+i <- 1
+while (i < num_samples) {
+  sample_unhealthy <- sample(x = unhealthy_microbiome, size = sample(x = 100:300, size = 1), replace = FALSE)
+  counts <- summary(sample_unhealthy)
+  sample_summary$Bacillota <- rbind(sample_summary$Bacillota, counts[1])
+  sample_summary$Bacteroidetes <- rbind(sample_summary$Bacteroidetes, counts[2])
+  sample_summary$Actinobacteria <- rbind(sample_summary$Actinobacteria, counts[3])
+  sample_summary$Verrucomicrobiota <- rbind(sample_summary$Verrucomicrobiota, counts[4])
+  sample_summary$Proteobacteria <- rbind(sample_summary$Proteobacteria, counts[5])
+  i <- i + 1
 }
-fitfinal1 <- data.frame(fitfinal1$A,fitfinal1$B,fitfinal1$C,fitfinal1$D,
-                        fitfinal1$E)
-fitfinal1 <- fitfinal1[-1,]
 
-fitfinal1$tags <- cbind(c(rep(1, nmuestras-1), rep(2, nmuestras-1)))
-fitfinal1[,"tags"]<-factor(fitfinal1[,"tags"]) #tags to FACTORS
+# Combine all collected samples into one dataframe
+sample_summary <- data.frame(sample_summary$Bacillota,
+                             sample_summary$Bacteroidetes,
+                             sample_summary$Actinobacteria,
+                             sample_summary$Verrucomicrobiota,
+                             sample_summary$Proteobacteria)
 
+# Remove initial zero row
+sample_summary <- sample_summary[-1, ]
 
-#PORCENTAJE DE CEROS DE NUESTRO DATAFRAME
-ceros <- (nrow(filter(fitfinal1,A == "0"))) + (nrow(filter(fitfinal1,B == "0"))) + 
-  (nrow(filter(fitfinal1,C == "0"))) + (nrow(filter(fitfinal1,D == "0"))) + 
-  (nrow(filter(fitfinal1,E == "0")))
-porcentajeCeros <- ceros/(5*(nmuestras-1)*2)*100
+# Add group labels: 1 for healthy, 2 for unhealthy
+sample_summary$group <- cbind(c(rep(1, num_samples - 1), rep(2, num_samples - 1)))
+sample_summary$group <- factor(sample_summary$group)
 
+# ---------------------------------------------
+# Calculate percentage of zeros in the dataset
+# ---------------------------------------------
+zero_counts <- nrow(filter(sample_summary, Bacillota == "0")) +
+               nrow(filter(sample_summary, Bacteroidetes == "0")) +
+               nrow(filter(sample_summary, Actinobacteria == "0")) +
+               nrow(filter(sample_summary, Verrucomicrobiota == "0")) +
+               nrow(filter(sample_summary, Proteobacteria == "0"))
 
-colnames(fitfinal1) <- c("Firmicutes","Bacteroidetes",
-                         "Actinobacteria","Fusobacteria",
-                         "Proteobacteria", "tags")
+zero_percentage <- zero_counts / (5 * (num_samples - 1) * 2) * 100
 
-write.csv2(fitfinal1,"D:\\phylum1.csv", row.names = FALSE)
+# Rename the columns with accurate phylum names
+colnames(sample_summary) <- c("Bacillota", "Bacteroidetes", "Actinobacteria", "Verrucomicrobiota", "Proteobacteria", "group")
 
-
+# Export the data to a CSV file
+write.csv2(sample_summary, "Phylum.csv", row.names = FALSE)
