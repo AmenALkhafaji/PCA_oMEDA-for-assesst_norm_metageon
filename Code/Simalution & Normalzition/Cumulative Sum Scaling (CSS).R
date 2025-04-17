@@ -18,7 +18,7 @@ library(metagenomeSeq)
 
 
 setwd("D:\\")
-Rrare <- read.csv(file="d:\\fitfinal.csv", header=TRUE, sep=";")
+Rrare <- read.csv(file="Phylum.csv", header=TRUE, sep=";")
 
 
 # Remove Tag from the dataset sample
@@ -46,5 +46,5 @@ OTU_read_count_CSS$tags<-tags
 
 # Save the RLE values to a CSV file
 
-write.csv(OTU_read_count_CSS, "D:\\CSSphylum.csv")
+write.csv(OTU_read_count_CSS, "CSS.csv")
 
