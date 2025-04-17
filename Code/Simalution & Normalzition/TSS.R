@@ -1,33 +1,29 @@
-
 #########################################################################
-#              Code: Total Sum Scaling Code                                         #               
-#              Author: Amen Adnan Khabeer; Jose Comacho; Crolina Comez  #                              #      
-#              Date: 19/02/2024                                         #
-#              Email: amen.a.khabeer@uotechnology.edu.iq                #
-#                   ;josecamacho@ugr.es;gomezll@ugr.es                  #  
+#              Code: Total Sum Scaling (TSS) Normalization              #
+#              Author: Amen Adnan Khabeer; Jose Comacho; Carolina Gomez #
+#              Date: 19/02/2024                                          #
+#              Emails: amen.a.khabeer@uotechnology.edu.iq               #
+#                      josecamacho@ugr.es; gomezll@ugr.es               #
 #                                                                       #
-#                                                                       #
-#                                                                       #
-#   Note : please load your Simulation or data                          #
+#   Note: Load your simulation data (Phylum or Genus level)             #
+#         Ensure your data file is saved in drive D:\                   #
 #########################################################################
 
+# Load dataset (e.g., Phylum abundance table)
+raw_abundance_data <- read.csv(file = "Phylum.csv", header = TRUE, sep = ";")
 
-# Load your data Simulation after Run your Simulation( pylum or Genus); Take in your account that your data saved in drive D
+# Extract sample identifiers or group tags
+sample_tags <- raw_abundance_data$tags
 
+# Remove the 'tags' column to retain only numeric abundance values
+abundance_matrix <- raw_abundance_data[, -6]
 
+# Apply Total Sum Scaling (TSS) normalization:
+# Divide each value by the total sum of all values in the matrix
+tss_normalized_data <- abundance_matrix / sum(abundance_matrix)
 
-df<- read.csv(file="Phylum.csv", header=TRUE, sep=";")
+# Optional: Add sample tags back (if needed)
+tss_normalized_data$tags <- sample_tags
 
-# Remove Tag from the dataset sample
-
-tags <- df$tags
-
-df$tags <- NULL
-
-# Find  total sum scaling
-df_scaled <- df / sum(df)
-
-# Save the TTS values to a CSV file
-df$tags<-tags
-write.csv(df_scaled, "TSS.csv")
-
+# Save the TSS-normalized dataset to a CSV file
+write.csv(tss_normalized_data, "TSS.csv", row.names = FALSE)
