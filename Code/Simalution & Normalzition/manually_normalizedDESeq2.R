@@ -19,7 +19,7 @@
 
 
 setwd("D:\\")
-data <- read.csv(file="genus.csv", header=TRUE, sep=";")
+data <- read.csv(file="Phylum.csv", header=TRUE, sep=";")
 
 
 # Remove Tag from the dataset sample
@@ -47,5 +47,5 @@ as.data.frame(manually_normalized$tags)<-tags
 
 
 # Save normaliezed data by DESeq2
-write.csv(manually_normalized, "F:\\DESeq.csv")
+write.csv(manually_normalized, "DESeq.csv")
 
