@@ -15,8 +15,8 @@
 # Load your data Simulation after Run your Simulation( pylum or Genus); Take in your account that your data saved in drive D
 
 
-setwd("D:\\")
-df<- read.csv(file="d:\\fitfinal.csv", header=TRUE, sep=";")
+
+df<- read.csv(file="Phylum.csv", header=TRUE, sep=";")
 
 # Remove Tag from the dataset sample
 
@@ -29,5 +29,5 @@ df_scaled <- df / sum(df)
 
 # Save the TTS values to a CSV file
 df$tags<-tags
-write.csv(df_scaled, "D:\\TSSphylum.csv")
+write.csv(df_scaled, "TSS.csv")
 
