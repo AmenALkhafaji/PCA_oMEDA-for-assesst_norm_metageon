@@ -1,6 +1,8 @@
+# Install required packages (only needs to be done once)
 install.packages('Rarefy')
 install.packages('phyloregion')
-#Required packages
+
+# Load required packages
 require(Rarefy)
 require(ade4)
 require(adiv)
@@ -9,72 +11,32 @@ require(vegan)
 require(phyloregion)
 require(raster)
 
-###########################################################################
-rm(list=ls())
-#Importamos los datos
+# Clear the environment
+rm(list = ls())
+
+# Set the working directory to where your data file is located
 setwd("D:\\")
-datos <- read.csv(file="D:\\Book15021.csv",header = FALSE,sep = ";")
-datos <-as.data.frame(datos )
 
+# Import the CSV file containing species or taxonomic abundance data
+raw_data <- read.csv(file = "Phylum.csv", header = FALSE, sep = ";")
 
-datos <- as.data.frame(apply(datos, 2, as.numeric))
-tag<-datos[,37]
+# Convert data to a proper data frame
+raw_data <- as.data.frame(raw_data)
 
-if (tag[1]==1) 
-{
-  datos<-datos[,-37] 
+# Convert all columns to numeric (in case they're read as character)
+numeric_data <- as.data.frame(apply(raw_data, 2, as.numeric))
 
-(raremax <- min(rowSums(datos)))
+# Extract the grouping or tag column (e.g., sample site, ID, etc.)
+sample_tags <- numeric_data[, 6]
 
-Rraree <- as.data.frame(rrarefy(datos, raremax))
-i=1;
+# Remove the tag column from the main abundance data
+abundance_data <- numeric_data[, -6]
 
-Rraree1=NULL
-n=51
-while ( i<n)
-{
-  Rraree <- as.data.frame(rrarefy(Rraree, raremax))
-  Rraree$itreation <-i
-  Rraree$tag <-1
-  Rraree1 <- as.data.frame(((rbind(Rraree1,Rraree))))
-  i<-i+1 
- }
+# Find the minimum total count across all rows (samples)
+minimum_sample_size <- min(rowSums(abundance_data))
 
+# Perform rarefaction to standardize sampling effort across samples
+rarefied_data <- as.data.frame(rrarefy(abundance_data, minimum_sample_size))
 
-}
-
-
-datos2 <- read.csv(file="D:\\Book15022.csv",header = FALSE,sep = ";")
-#remove tags from the dataframe to proccess the recored only
-
-#datos2 <-datos2[-1, ] #Establish the rarefaction level: = DL.min that defined as lowest depth of samples.
-
-datos2 <- as.data.frame(apply(datos2, 2, as.numeric))
-tag2<-datos2[,37]
-if (tag2[1]==2) 
-{
-  datos2<-datos2[,-37] 
-  
-  (raremax2 <- min(rowSums(datos)))
-  
-  Rraree2 <- as.data.frame(rrarefy(datos2, raremax2))
-  i2=1;
-  
-  Rraree4=NULL
-  
-  while ( i2<n)
-  {
-    Rraree2 <- as.data.frame(rrarefy(Rraree2, raremax2))
-    Rraree2$itreation <-i2
-    Rraree2$tag <-2
-    Rraree4 <- as.data.frame(((rbind(Rraree4,Rraree2))))
-    i2<-i2+1 
-  }
-  
-  
-}
-
-
-Rraree4 <- as.data.frame(((rbind(Rraree1,Rraree4))))
-write.csv(Rraree4, "d:\\final_G_50_2.csv", row.names = TRUE)
-
+# Export the rarefied data to a CSV file
+write.csv(rarefied_data, "rarefaction.csv", row.names = TRUE)
