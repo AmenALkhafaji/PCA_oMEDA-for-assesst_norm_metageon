@@ -11,10 +11,10 @@ library(edgeR)
 data <- read.csv("Phylum.csv", header = TRUE, sep=";")
 
 # Extract the group information from the 37th column
-group <- as.factor(data[, 37])  # Assuming 1 = h, 2 = S
+group <- as.factor(data[, 6])  # Assuming 1 = h, 2 = S
 print(length(group))
 # Remove the last column from the data to get only expression values
-expression_data <- data[, 1:36]
+expression_data <- data[, 1:5]
 
 # Create a DGEList object (Digital Gene Expression List)
 dge <- DGEList(counts = t(expression_data), group = t(group))
