@@ -34,7 +34,7 @@ After downloading MEDA Toolbox version 1.10, unzip the folder and add it to the 
 
 ---
 
-##In MATLAB, run:
+## In MATLAB, run:
 
 ```matlab
 addpath(genpath('path_to/MEDA-Toolbox-1.10'));
@@ -42,7 +42,7 @@ savepath;
 
 ---
 
-##Data/
+## Data
 
 Contains the simulated datasets and the corresponding ground-truth files for both phylum-level and genus-level analyses.
 
@@ -50,13 +50,13 @@ This folder can be used directly if you do not want to regenerate the simulation
 
 ---
 
-##PCA_oMEDA/
+## PCA_oMEDA
 
 Contains MATLAB functions used to run PCA and oMEDA analyses and to compare the recovered structure against the simulated ground truth.
 
 ---
 
-##Result/
+## Result
 
 Contains output figures and results from PCA-oMEDA analyses.
 
