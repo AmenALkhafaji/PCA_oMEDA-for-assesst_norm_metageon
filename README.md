@@ -160,13 +160,7 @@ For MEDA-related issues:
 Dr. José Camacho
 josecamacho@ugr.es
 
----
-
-### License
-
-GNU GPL v3.0 or later.
-
-See the LICENSE file for full text.
+.
 
 
 
