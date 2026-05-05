@@ -139,9 +139,6 @@ Other methods from included R scripts
 
 ---
 
-## Citation
-
-If you use this repository, please cite:
 
 ## Citation
 
@@ -149,6 +146,7 @@ If you use this repository, please cite:
 
 Al Khafaji A, Vallejo-España D, Gómez-Llorente C, Camacho J. *A Realistic Simulation Framework for Evaluating Microbiome Normalization in Sample Stratification and Taxa-Level Analysis*. Manuscript in preparation.
 https://github.com/AmenALkhafaji/PCA_oMEDA-for-assesst_norm_metageon
+
 ---
 
 ## Acknowledgements
