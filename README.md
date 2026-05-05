@@ -143,12 +143,12 @@ Other methods from included R scripts
 
 If you use this repository, please cite:
 
-Camacho, J., Pérez, A., Rodríguez, R., Jiménez-Mañas, E.
-Multivariate Exploratory Data Analysis (MEDA) Toolbox.
-Chemometrics and Intelligent Laboratory Systems, 2015, 143: 49–57.
+## Citation
 
-https://github.com/josecamachop/MEDA-Toolbox
+If you use this repository, please cite:
 
+Al Khafaji A, Vallejo-España D, Gómez-Llorente C, Camacho J. *A Realistic Simulation Framework for Evaluating Microbiome Normalization in Sample Stratification and Taxa-Level Analysis*. Manuscript in preparation.
+https://github.com/AmenALkhafaji/PCA_oMEDA-for-assesst_norm_metageon
 ---
 
 ## Acknowledgements
