@@ -1,0 +1,140 @@
+% This scripts calculates the oMEDA vectors and error values for all
+% normalization methods
+
+close all; clc; clear;
+
+% Uncomment the lines corresponding to only one taxonomic level: phylum or genus
+
+% PHYLUM
+% ground_truth = [50, 35, 0.5, 6, 2.2; 45, 40, 1.15, 3, 10]';
+% infection_status = repelem([1 2 1 2 1 2], 50)';
+% lab = {"Bacillota", "Bacteroidetes", "Actinobacteria", "Verrucomicrobiota", "Proteobacteria"};
+% scenario = "Negative";  % change this according to scenario
+% dataPath = "Data/phylum/" + scenario;
+
+% GENUS
+ground_truth = ...
+    [0.15, 0.6, 1.5, 1.6, 12.2, 4.1, 30.8, 2.3, 0.14, 1.21, 0.18, 0.32, ...
+      3.31, 0.63, 0.17, 0.34, 1.08, 0.14, 2.15, 2.37, 0.033, 0.47, 0.34, ...
+      5.46, 3.47, 6.42, 4.25, 2.81, 0.36, 1.02, 0.83, 1.8, 0.31, 1e-06, ...
+      0.17, 7.1; 0.38, 0.6, 1.5, 0, 26, 0.01, 0.02, 11, 0.7, 1, 0.14, 1, ...
+      0.15, 0.3, 0, 0.3, 3.00, 0.14, 0.02, 0.5, 1, 0.14, 2, 4.8, ...
+      0, 0.2, 0.05, 5, 3, 2.7, 0.8, 8, 0.22, 0, 0.31, 1.23]';
+infection_status = repelem([1 2 1 2 1 2], 50)';
+lab = {"Bifidobacterium","Butyricimonas","Odoribacter","Paraprevotella", ...
+      "Bacteroides","Parabacteroides","Prevotella","Unknown1","Unknown2", ...
+      "Unknown3","Clostridium","Unknown4","Unknown5","Ruminococcus","Anaerostipes", ...
+      "Blautia","Coprococcus","Dorea","Lachnospira","Roseburia","Unknown6", ...
+      "Unknown7","Unknown8","Unknown9","Faecalibacterium","Oscillospira", ...
+      "Ruminococcus_dup","Dialister","Unknown10","Unknown11","Unknown12","Sutterella", ...
+      "Escherichia","Klebsiella","Haemophilus","Akkermansia"};
+scenario = "Negative";  % change this according to scenario
+dataPath = "Data/Genus/" + scenario;
+
+
+%% Apply ground truth formula
+GTP1 = ground_truth;
+GTP1 = GTP1 - mean(GTP1(:,1:2), 2) * ones(1, 1);
+gt = sign(GTP1(:,2)) .* (GTP1(:,2).^2) - sign(GTP1(:,1)) .* (GTP1(:,1).^2);
+if any(gt ~= 0) % avoid division by zero
+    gt = gt / norm(gt);
+end
+
+%% Get list of subdirectories (each represents a normalization method)
+allEntries = dir(dataPath);
+methodDirs = allEntries([allEntries.isdir] & ~startsWith({allEntries.name}, '.'));
+
+% Filter only folders containing CSV files
+hasCsv = false(1, length(methodDirs));
+for i = 1:length(methodDirs)
+    currentSubDir = fullfile(dataPath, methodDirs(i).name);
+    csvFiles = dir(fullfile(currentSubDir, '*.csv'));
+    
+    if ~isempty(csvFiles)
+        hasCsv(i) = true;
+    end
+end
+methodDirs = methodDirs(hasCsv);
+
+%% PCA and oMEDA computation for all normalization methods
+
+R = 100; % Number of replicates (matches 100 CSVs per folder)
+rng(1);  % For reproducibility
+
+% Error containers
+numMethods = length(methodDirs);
+omedaLow = zeros(R, length(lab), numMethods); 
+omedaHigh = zeros(R, length(lab), numMethods); 
+omedaFull = zeros(R, length(lab), numMethods);
+methodNames = strings(1, numMethods);
+
+fprintf('Starting analysis for %d methods...\n', numMethods);
+
+% Main loop through each method
+for d = 1:numMethods
+    subfolderName = methodDirs(d).name;
+    methodName = split(subfolderName, "_");
+    methodNames(d) = methodName{5};
+    methodFullPath = fullfile(dataPath, subfolderName);
+    
+    % List all CSV files in the current method's folder
+    csvFiles = dir(fullfile(methodFullPath, '*.csv'));
+    
+    % Check if we have enough files
+    if length(csvFiles) < R
+        warning('Method %s has only %d files. Skipping.', methodNames(d), length(csvFiles));
+        continue;
+    end
+    
+    fprintf('Processing method: [%s] ', methodNames(d));
+    fprintf('000%%');
+    for r = 1:R
+        % Load the CSV file
+        currentFile = fullfile(methodFullPath, csvFiles(r).name);
+        X = readmatrix(currentFile);  % data is already sorted by depth
+        y = infection_status;
+
+        % Remove "group" column if it exists
+        if all(X(:,end) == y)
+            X(:, end) = [];
+        end
+        
+        % Adjust labels for oMEDA (assumes {1,2} mapping to {-1,1})
+        yPM = y; 
+        yPM(yPM == 1) = -1; 
+        yPM(yPM == 2) = 1;
+        
+        % Indices of depth groups
+        idxLow  = 1:100;
+        idxHigh = 201:300;
+        idxFull = 1:size(X,1);
+   
+        % --- Perform oMEDA and calculate errors ---
+        
+        % Low Depth
+        omedaLow(r, :, d) = omedaPca(X(idxLow,:), [], X(idxLow,:), yPM(idxLow), 'VarsLabel', lab, 'Preprocessing', 1);
+        
+        % High Depth
+        omedaHigh(r, :, d) = omedaPca(X(idxHigh,:), [], X(idxHigh,:), yPM(idxHigh), 'VarsLabel', lab, 'Preprocessing', 1);
+        
+        % Full Dataset
+        omedaFull(r, :, d) = omedaPca(X(idxFull,:), [], X(idxFull,:), yPM(idxFull), 'VarsLabel', lab, 'Preprocessing', 1);
+        
+        % Save oMEDA plot for the first dataset
+        if r == 1
+            savefig(gcf, "oMEDA_" + scenario + "_" + methodNames(d) + ".fig");
+            exportgraphics(gcf, "oMEDA_" + scenario + "_" + methodNames(d) + ".png", 'Resolution', 600);
+        end
+
+        close all;
+        
+        if mod(r, 5) == 0, fprintf('\b\b\b\b%03d%%', r); end  % Progress indicator
+    end
+    fprintf('.\n');
+end
+
+% Save oMEDA values
+% Dimensions: number of repetitions x number of taxa x number of methods
+outputName = "oMEDA_results_" + replace(dataPath, "/", "_") + ".mat";
+save(outputName, "omedaLow", "omedaHigh", "omedaFull", "lab", "methodNames");
+fprintf('Results saved to %s\n', outputName);

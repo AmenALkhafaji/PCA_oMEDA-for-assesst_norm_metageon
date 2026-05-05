@@ -1,0 +1,8 @@
+Normalization_Method,control shannon_mean(sd) at low depth,Low case shannon mean( sd),Counts of sig p_value at low depth,Counts of nonsig p_value at low depth,control shannon mean( sd) at high depth,case shannon mean( sd) high,Counts of sig p_value at high depth,Counts of nonsig p_value at high depth,control shannon mean( sd) at full depth,case shannon mean( sd) at full depth,Count of sig p_value at full depth,Counts of nonsig p_value at full depth
+CLR,2.9328 (0.0122),2.7582 (0.0076),100,0,2.8089 (0.0085),2.6994 (0.0064),100,0,2.8652 (0.0067),2.7261 (0.0049),100,0
+CSS,2.5020 (0.0152),2.5853 (0.0081),100,0,2.5639 (0.0108),2.6088 (0.0069),92,8,2.5359 (0.0071),2.5988 (0.0046),100,0
+DESeq2,2.5020 (0.0152),2.5853 (0.0081),100,0,2.5639 (0.0108),2.6088 (0.0069),92,8,2.5359 (0.0071),2.5988 (0.0046),100,0
+RAREFY,2.4681 (0.0168),2.4691 (0.0174),2,98,2.4718 (0.0173),2.4710 (0.0186),6,94,2.4697 (0.0108),2.4692 (0.0098),5,95
+TSS,2.5020 (0.0152),2.5853 (0.0081),100,0,2.5639 (0.0108),2.6088 (0.0069),92,8,2.5359 (0.0071),2.5988 (0.0046),100,0
+counts,2.5020 (0.0152),2.5853 (0.0081),100,0,2.5639 (0.0108),2.6088 (0.0069),92,8,2.5359 (0.0071),2.5988 (0.0046),100,0
+edgeR,2.5020 (0.0152),2.5853 (0.0081),100,0,2.5639 (0.0108),2.6088 (0.0069),92,8,2.5359 (0.0071),2.5988 (0.0046),100,0
