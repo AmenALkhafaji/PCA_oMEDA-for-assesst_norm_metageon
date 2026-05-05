@@ -41,7 +41,8 @@ Replace path_to with your local folder.
 ---
 
 ## Repository Structure 
-.
+
+
 ├── README.md
 ├── LICENSE
 ├── Data/
