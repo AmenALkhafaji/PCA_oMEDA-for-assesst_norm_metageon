@@ -35,6 +35,7 @@ https://github.com/josecamachop/MEDA-Toolbox
 ## Installation 
 addpath(genpath('path_to/MEDA-Toolbox-1.10'));
 savepath; 
+
 Replace path_to with your local folder.
 
 ---
