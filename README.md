@@ -1,5 +1,4 @@
-# PCA-oMEDA Framework for Assessing Normalization Methods in Metagenomics Data
-
+#A Realistic Simulation Framework for Evaluating Microbiome Normalization in Sample Stratification and Taxa-Level Analysis
 This repository contains scripts and data for evaluating normalization methods in simulated metagenomics count data using alpha-diversity screening, PCA, and observation-based Missing-data methods for Exploratory Data Analysis (oMEDA).
 
 The framework compares raw and normalized microbiome datasets against known simulated ground truth at both phylum and genus levels.
