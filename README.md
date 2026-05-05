@@ -161,9 +161,3 @@ For MEDA-related issues:
 Dr. José Camacho
 josecamacho@ugr.es
 
-.
-
-
-
-## Acknowledgements
-## License
